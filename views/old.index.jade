@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  
+  h1= title
+  p SDK para controlar el dron
+
+  br
+
+  hr
+  
+  button(id="btnEncender") Encender  
+  button(id="btnApagar") Apagar
+
+  hr 
+
+  br
+  button(id="btnAdelante") Adelante
+  br
+  button(id="btnIzquierda") Izquierda
+  button(id="btnDerecha") Derecha
+  br
+  button(id="btnAtras") Atras
+  br
+
+  br
+
+  hr
+    
+  ul
+    li
+      strong
+        label Estado del boton 1 : 
+        label(id="statusBtn1") Apretado/Suelto
+    li
+      strong
+        label Estado del led 1 : 
+        label(id="statusLed") Prendidio/Apagado
+    li
+      strong
+        label Mensaje del nano : 
+        label(id="msgMCU") No dice nada

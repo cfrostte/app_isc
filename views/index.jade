@@ -1,0 +1,40 @@
+extends layout
+block content
+  h3= title
+  p Aplicacion para controlar el dron
+  hr
+  button(id="btnEncender") Encender  
+  button(id="btnApagar") Apagar
+  center 
+    img(src='images/sin_video.gif', height='100', with='200')
+    // canvas(id='visor', height='100', with='200')
+    h1(id='direccionDron') .
+    button(id="btnAdelante") Adelante = W
+    br
+    button(id="btnIzquierda") Izquierda = A
+    button(id="btnAtras") Atras = S
+    button(id="btnDerecha") Derecha = D
+    br
+    button(id="btnFrenar") Frenar = F
+    p Izquierda | Neutro | Derecha
+      br
+      input(type='radio', name="senialero", id="senialero", value="izquierda")
+      input(type='radio', name="senialero", id="senialero", value="neutro")
+      input(type='radio', name="senialero", id="senialero", value="derecha")
+  hr
+  ul
+    li
+      strong
+        label El motor esta 
+        label(id="statusMotor") ?
+    li
+      strong
+        label La distancia es 
+        label(id="sensorDistancia") ?
+  hr
+  p Seguir linea 
+    input(type='checkbox', id='seguirLinea', value='seguir_linea')
+
+  hr
+  p Usar control 
+    input(type='checkbox', id='usarControl', value='usar_control')
