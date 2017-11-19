@@ -59,47 +59,98 @@ $(document).ready( function() {
 	    }
 	});
 
+	var a_press_enviada = false;
+	var d_press_enviada = false;
+	var f_press_enviada = false;
+	var o_press_enviada = false;
+	var p_press_enviada = false;
+	var s_press_enviada = false;
+	var w_press_enviada = false;
+
 	$(document).keyup(function(tecla) {
 
-		console.log("keyup>tecla.which = "+tecla.which);
+		// console.log("keyup>tecla.which = " + tecla.which);
 
-		var w = 119;
-		var s = 115;
-		var a = 97;
-		var d = 100;
-		var f = 102;
-		var p = 112;
-		var o = 111;
+		var s_up = 83;
+		var w_up = 87;
 
-		$('#btnFrenar').trigger('click');
-
-		if (tecla.which == w || tecla.which == s) $('#btnFrenar').trigger('click');
-
-		$('input:radio[name=senialero]').val(['neutro']);
+		if (tecla.which == w_up || tecla.which == s_up) {
+			$('#btnFrenar').trigger('click');
+			tecla_enviada("f_press_enviada");
+		}
 	
 	});
 
 	$(document).keypress(function(tecla) {
 
-		console.log("keypress>tecla.which = "+tecla.which);
-		
-		var w = 119;
-		var s = 115;
-		var a = 97;
-		var d = 100;
-		var f = 102;
-		var p = 112;
-		var o = 111;
+		// console.log("keypress>tecla.which = " + tecla.which);
 
-		if (tecla.which == p) $('#btnEncender').trigger('click');
-		if (tecla.which == o) $('#btnApagar').trigger('click');
-		if (tecla.which == w) $('#btnAdelante').trigger('click');
-		if (tecla.which == s) $('#btnAtras').trigger('click');
-		if (tecla.which == a) $('#btnIzquierda').trigger('click');
-		if (tecla.which == d) $('#btnDerecha').trigger('click');
-		if (tecla.which == f) $('#btnFrenar').trigger('click');
+		var a_press = 97;
+		var d_press = 100;
+		var f_press = 102;
+		var o_press = 111;
+		var p_press = 112;
+		var s_press = 115;
+		var w_press = 119;
+
+		if (tecla.which == p_press && !p_press_enviada) {
+			$('#btnEncender').trigger('click');
+			tecla_enviada("p_press_enviada");
+		}
+
+		if (tecla.which == o_press && !o_press_enviada) {
+			$('#btnApagar').trigger('click');
+			tecla_enviada("o_press_enviada");
+		}
+
+		if (tecla.which == w_press && !w_press_enviada) {
+			$('#btnAdelante').trigger('click');
+			tecla_enviada("w_press_enviada");
+		}
+
+		if (tecla.which == s_press && !s_press_enviada) {
+			$('#btnAtras').trigger('click');
+			tecla_enviada("s_press_enviada");
+		}
+
+		if (tecla.which == a_press && !a_press_enviada) {
+			$('#btnIzquierda').trigger('click');
+			tecla_enviada("a_press_enviada");
+		} 
+
+		if (tecla.which == d_press && !d_press_enviada) {
+			$('#btnDerecha').trigger('click');
+			tecla_enviada("d_press_enviada");
+		} 
+
+		if (tecla.which == f_press && !f_press_enviada) {
+			$('#btnFrenar').trigger('click');
+			tecla_enviada("f_press_enviada");
+		}
 	
 	});
+
+	function tecla_enviada(press_enviada) {
+
+		// Ninguna de estas teclas fueron enviadas...			
+		a_press_enviada = false;
+		d_press_enviada = false;
+		f_press_enviada = false;
+		o_press_enviada = false;
+		p_press_enviada = false;
+		s_press_enviada = false;
+		w_press_enviada = false;
+
+		// excepto solo una de las siguientes teclas:
+		if (press_enviada=="a_press_enviada") a_press_enviada = true;
+		if (press_enviada=="d_press_enviada") d_press_enviada = true;
+		if (press_enviada=="f_press_enviada") f_press_enviada = true;
+		if (press_enviada=="o_press_enviada") o_press_enviada = true;
+		if (press_enviada=="p_press_enviada") p_press_enviada = true;
+		if (press_enviada=="s_press_enviada") s_press_enviada = true;
+		if (press_enviada=="w_press_enviada") w_press_enviada = true;
+
+	}
 
 	socket.on("recibirDatos", function(datos) {
 		
