@@ -78,6 +78,8 @@ $(document).ready( function() {
 			$('#btnFrenar').trigger('click');
 			tecla_enviada("f_press_enviada");
 		}
+
+		$('#direccionDron').text('.');
 	
 	});
 
@@ -113,14 +115,14 @@ $(document).ready( function() {
 			tecla_enviada("s_press_enviada");
 		}
 
-		if (tecla.which == a_press && !a_press_enviada) {
+		if (tecla.which == a_press /* && !a_press_enviada */) {
 			$('#btnIzquierda').trigger('click');
-			tecla_enviada("a_press_enviada");
+			// tecla_enviada("a_press_enviada");
 		} 
 
-		if (tecla.which == d_press && !d_press_enviada) {
+		if (tecla.which == d_press /* && !d_press_enviada */) {
 			$('#btnDerecha').trigger('click');
-			tecla_enviada("d_press_enviada");
+			// tecla_enviada("d_press_enviada");
 		} 
 
 		if (tecla.which == f_press && !f_press_enviada) {
