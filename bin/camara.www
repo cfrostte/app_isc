@@ -3,12 +3,16 @@
 /**
  * Module dependencies.
  */
-
-var app = require('../app');
 var childProcess = require('child_process');
-var debug = require('debug')('lab1_app_isc:server');
+var app = require('../app');
 var debug = require('debug')('tolocar:server');
 var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
@@ -17,6 +21,8 @@ app.set('port', port);
  * Create HTTP server.
  */
  WebSocket = require('ws');
+
+
 
 // Websocket Server
 var socketServer = new WebSocket.Server({port: 3030, perMessageDeflate: false});
@@ -44,81 +50,37 @@ socketServer.broadcast = function(data) {
   });
 };
 
+
+
+
 console.log('WebSocket server listening on port ' + 3030);
 
-var server = http.createServer(app);
-var io = require("socket.io")(server);
 
+
+
+var server = http.createServer(app);
+var io = require('socket.io')(server);
 /**
  * Listen on provided port, on all network interfaces.
  */
-
-io.on("connection", function(cliente) {
-
-  console.log("Cliente conectado");
-
-  cliente.on("saludos",function(dato){
+io.on("connection",function(socket){
+  console.log("Usuario Conectado");
+  socket.on("saludos",function(dato){
     console.log("Saludo:" + dato);
   });
-  cliente.on("posicion",function(eje,tipo){
+  socket.on("posicion",function(eje,tipo){
     console.log("Eje:" + eje + " / " + tipo);
   })
-  
- cliente.on("enviarDatos", function(datos) {
-  
-   console.log("funcion enviarDatos");
+});
 
-   switch(datos) {
-    
-     case "encenderLED" :
-       console.log("envio a MCU encenderLED");
-       io.emit("enviarDatosalMCU", "encenderLED");
-
-     break;
-    
-    case "apagarLED" :
-      console.log("envio a MCU apagarLED");
-      io.emit("enviarDatosalMCU", "apagarLED");
-      break;
-
-    case "acelerarDron" :
-      console.log("envio a MCU acelerarDron");
-      io.emit("enviarDatosalMCU", "acelerarDron");
-    break;
-    
-    case "retrocederDron" :
-      console.log("envio a MCU retrocederDron");
-      io.emit("enviarDatosalMCU", "retrocederDron");
-    break;
-
-    case "izquierdaDron" :
-      console.log("envio a MCU izquierdaDron");
-      io.emit("enviarDatosalMCU", "izquierdaDron");
-    break;
-
-    case "derechaDron" :
-      console.log("envio a MCU derechaDron");
-      io.emit("enviarDatosalMCU", "derechaDron");
-    break;
-
-    case "frenarDron" :
-      console.log("envio a MCU frenarDron");
-      io.emit("enviarDatosalMCU", "frenarDron");
-    break;    
-   }
-
- });
-
-})
 
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-/* Codigo de la camara */
-
 var width=320;
 var height = 240;
+
 
 io.broadcast = function(data, opts) {
   for(var i in this.clients) {
@@ -130,6 +92,7 @@ io.broadcast = function(data, opts) {
     }
   }
 };
+
 
 http.createServer(function (req, res) {
   console.log(
@@ -149,16 +112,22 @@ http.createServer(function (req, res) {
  childProcess.exec('./bin/do_ffmpeg.sh');
 });
 
-/******************************************************************************/
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
 
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
   if (isNaN(port)) {
+    // named pipe
     return val;
   }
 
   if (port >= 0) {
+    // port number
     return port;
   }
 
