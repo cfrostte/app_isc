@@ -3,82 +3,131 @@
 /**
  * Module dependencies.
  */
-
+var childProcess = require('child_process');
 var app = require('../app');
-var debug = require('debug')('lab1_app_isc:server');
+var debug = require('debug')('tolocar:server');
 var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
+/**
+ * Create HTTP server.
+ */
+ WebSocket = require('ws');
+
+
+
+// Websocket Server
+var socketServer = new WebSocket.Server({port: 3030, perMessageDeflate: false});
+socketServer.connectionCount = 0;
+socketServer.on('connection', function(socket, upgradeReq) {
+  socketServer.connectionCount++;
+  console.log(
+    'New WebSocket Connection: ', 
+    (upgradeReq || socket.upgradeReq).socket.remoteAddress,
+    (upgradeReq || socket.upgradeReq).headers['user-agent'],
+    '('+socketServer.connectionCount+' total)'
+  );
+  socket.on('close', function(code, message){
+    socketServer.connectionCount--;
+    console.log(
+      'Disconnected WebSocket ('+socketServer.connectionCount+' total)'
+    );
+  });
+});
+socketServer.broadcast = function(data) {
+  socketServer.clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  });
+};
+
+
+
+
+console.log('WebSocket server listening on port ' + 3030);
+
+
+
 
 var server = http.createServer(app);
+var io = require('socket.io')(server);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+io.on("connection",function(socket){
+  console.log("Usuario Conectado");
+  socket.on("saludos",function(dato){
+    console.log("Saludo:" + dato);
+  });
+  socket.on("posicion",function(eje,tipo){
+    console.log("Eje:" + eje + " / " + tipo);
+  })
+});
 
-var io = require("socket.io")(server);
-
-io.on("connection", function(cliente) {
-  
-   console.log("Cliente conectado");
-  
-   cliente.on("enviarDatos", function(datos) {
-    
-     console.log("funcion enviarDatos");
-
-     switch(datos) {
-      
-       case "encenderLED" :
-         console.log("envio a MCU encenderLED");
-         io.emit("enviarDatosalMCU", "encenderLED");
-  
-       break;
-      
-      case "apagarLED" :
-        console.log("envio a MCU apagarLED");
-        io.emit("enviarDatosalMCU", "apagarLED");
-        break;
-
-      case "acelerarDron" :
-        console.log("envio a MCU acelerarDron");
-        io.emit("enviarDatosalMCU", "acelerarDron");
-      break;
-      
-      case "retrocederDron" :
-        console.log("envio a MCU retrocederDron");
-        io.emit("enviarDatosalMCU", "retrocederDron");
-      break;
-
-      case "izquierdaDron" :
-        console.log("envio a MCU izquierdaDron");
-        io.emit("enviarDatosalMCU", "izquierdaDron");
-      break;
-
-      case "derechaDron" :
-        console.log("envio a MCU derechaDron");
-        io.emit("enviarDatosalMCU", "derechaDron");
-      break;
-
-      case "frenarDron" :
-        console.log("envio a MCU frenarDron");
-        io.emit("enviarDatosalMCU", "frenarDron");
-      break;    
-     }
-
-   });
-
-})
 
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+var width=320;
+var height = 240;
+
+
+io.broadcast = function(data, opts) {
+  for(var i in this.clients) {
+    if(this.clients[i].readyState == 1) {
+      this.clients[i].send(data, opts);
+    }
+    else {
+      console.log('Error: Client (' + i + ') not connected.');
+    }
+  }
+};
+
+
+http.createServer(function (req, res) {
+  console.log(
+    'Stream Connected: ' + req.socket.remoteAddress +
+    ':' + req.socket.remotePort + ' size: ' + width + 'x' + height
+  );
+
+  req.on('data', function(data){
+    socketServer.broadcast(data);
+    if (req.socket.recording) {
+      req.socket.recording.write(data);
+    }
+  });
+
+}).listen(8082, function () {
+  console.log('Listening for video stream on port ' + 8082);
+ childProcess.exec('./bin/do_ffmpeg.sh');
+});
+
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
   if (isNaN(port)) {
+    // named pipe
     return val;
   }
 
   if (port >= 0) {
+    // port number
     return port;
   }
 

@@ -1,12 +1,14 @@
 $(document).ready( function() {
-
+	
 	var socket = io();
-
+	
 	var visor = document.getElementById("visor");
 	var url = "ws://"+document.location.hostname+":3030";
 	var reproductor = new JSMpeg.Player(url, { canvas : visor });
 
 	console.log(reproductor);
+
+	jsmpeg.min.js:3 WebGL: INVALID_OPERATION: texImage2D: type UNSIGNED_BYTE but ArrayBufferView not Uint8Array
 
 	$('#btnEncender').click(function() {
 		socket.emit("enviarDatos", "encenderLED");

@@ -7,7 +7,8 @@ block content
   button(id="btnApagar") Apagar
   center 
     //img(src='images/sin_video.gif', height='100', with='200')
-    canvas(id='visor', height='240', with='320')
+    canvas(id='era_visor
+', height='100', with='200')
     h1(id='direccionDron') .
     button(id="btnAdelante") Adelante = W
     br
